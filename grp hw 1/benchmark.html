@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Majority Benchmark</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root { --bg: #f3efe8; --ink: #201d16; --accent: #e65c2f; --accent2: #2f6fe6; --accent3: #2f9e44; }
+    body { margin: 0; font-family: 'Georgia', serif; background: radial-gradient(circle at top, #fff6e7 0%, var(--bg) 55%, #eadfcf 100%); color: var(--ink); }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 40px 24px 56px; }
+    h1 { font-size: 2.3rem; letter-spacing: 0.02em; margin-bottom: 12px; }
+    p { margin-top: 0; max-width: 720px; }
+    .card { background: rgba(255,255,255,0.7); border-radius: 18px; padding: 18px 18px 26px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    canvas { width: 100%; height: 420px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Majority Element Benchmark</h1>
+    <p>Timing results for Moore voting, sort-based, and brute force majority detection with a growing array up to 1,000,000 elements (brute force capped at 50,000).</p>
+    <div class="card">
+      <canvas id="benchChart"></canvas>
+    </div>
+  </div>
+  <script>
+    const labels = ['1', '2', '5', '10', '20', '50', '100', '200', '500', '1000', '2000', '5000', '10000', '20000', '50000', '100000', '200000', '500000', '1000000'];
+    const data = {
+      labels,
+      datasets: [
+        { label: 'Moore voting (us)', data: [0.03, 0.03, 0.04, 0.05, 0.07, 0.14, 0.20, 0.38, 0.89, 1.53, 2.34, 4.19, 6.67, 13.05, 44.64, 86.01, 144.79, 312.89, 709.49], borderColor: '#e65c2f', backgroundColor: 'rgba(230,92,47,0.15)', tension: 0.25 },
+        { label: 'Sort-based (us)', data: [0.08, 0.08, 0.09, 0.11, 0.25, 0.57, 1.26, 2.38, 6.05, 15.26, 26.48, 105.77, 236.05, 426.03, 1107.69, 2518.39, 5096.49, 13938.71, 28263.70], borderColor: '#2f6fe6', backgroundColor: 'rgba(47,111,230,0.12)', tension: 0.25 },
+        { label: 'Brute force (us)', data: [0.01, 0.03, 0.11, 0.20, 0.80, 4.21, 14.17, 48.63, 277.89, 1022.62, 2729.59, 14600.33, 115765.85, 575811.07, 3785392.12, null, null, null, null], borderColor: '#2f9e44', backgroundColor: 'rgba(47,158,68,0.12)', tension: 0.25 }
+      ]
+    };
+
+    new Chart(document.getElementById('benchChart'), {
+      type: 'line',
+      data,
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } },
+        scales: { y: { type: 'logarithmic', title: { display: true, text: 'Time (microseconds, log)' } }, x: { title: { display: true, text: 'Array size' } } }
+      }
+    });
+  </script>
+</body>
+</html>

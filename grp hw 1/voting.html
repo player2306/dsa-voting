@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live Vote: Top Coding Language</title>
+  <style>
+    :root {
+      --bg: #f3f1ec;
+      --panel: #ffffff;
+      --ink: #1f1c17;
+      --muted: #6a5f52;
+      --accent: #e66a2c;
+      --accent-2: #2c6ae6;
+      --stroke: #e7e0d6;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #ffe7d6 0%, transparent 60%),
+        radial-gradient(900px 500px at 95% 0%, #dce9ff 0%, transparent 55%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 48px 20px 64px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .title {
+      display: grid;
+      gap: 6px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 40px);
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
+      min-width: 160px;
+      text-align: right;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+    }
+
+    .stat-sub {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid rgba(230, 106, 44, 0.1);
+      pointer-events: none;
+    }
+
+    .card header {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .badge {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .language {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .vote-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .vote-row button {
+      border: none;
+      background: var(--ink);
+      color: #fff;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .vote-row button:hover {
+      transform: translateY(-1px) scale(1.01);
+      background: #000;
+    }
+
+    .vote-row button:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .count {
+      font-weight: 600;
+      color: var(--accent-2);
+    }
+
+    .bar {
+      width: 100%;
+      height: 10px;
+      background: #f1ede7;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar span {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #ffb58c);
+      border-radius: inherit;
+      transition: width 0.4s ease;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .controls button {
+      border: 1px solid var(--stroke);
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: border 0.2s ease, color 0.2s ease;
+    }
+
+    .controls button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    footer {
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .stat {
+        text-align: left;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <span class="badge">Moore's voting</span>
+        <h1>Top Coding Language</h1>
+        <p>Vote to reveal the majority candidate in real time.</p>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <span>Total Votes</span>
+          <strong id="totalVotes">0</strong>
+        </div>
+        <div class="stat">
+          <span>Majority Candidate</span>
+          <strong id="majorityCandidate">None</strong>
+          <span class="stat-sub" id="majorityStatus">No majority yet</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="grid" id="voteGrid"></section>
+
+    <div class="controls">
+      <button id="resetVotes">Reset votes</button>
+      <button id="randomVote">Random vote</button>
+    </div>
+
+    <footer>Tip: votes are saved locally in your browser using localStorage.</footer>
+  </div>
+
+  <script>
+    const languages = [
+      "Python",
+      "JavaScript",
+      "Java",
+      "C++",
+      "Go",
+      "TypeScript"
+    ];
+
+    const stateKey = "voteStream";
+
+    const loadVotes = () => {
+      const stored = localStorage.getItem(stateKey);
+      if (!stored) {
+        return [];
+      }
+      try {
+        const parsed = JSON.parse(stored);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    };
+
+    const saveVotes = (votes) => {
+      localStorage.setItem(stateKey, JSON.stringify(votes));
+    };
+
+    const voteGrid = document.getElementById("voteGrid");
+    const totalVotesEl = document.getElementById("totalVotes");
+    const majorityCandidateEl = document.getElementById("majorityCandidate");
+    const majorityStatusEl = document.getElementById("majorityStatus");
+    const resetVotesBtn = document.getElementById("resetVotes");
+    const randomVoteBtn = document.getElementById("randomVote");
+
+    let votes = loadVotes();
+
+    const tallyCounts = (votesList) => {
+      const counts = Object.fromEntries(languages.map((lang) => [lang, 0]));
+      votesList.forEach((lang) => {
+        if (counts[lang] !== undefined) {
+          counts[lang] += 1;
+        }
+      });
+      return counts;
+    };
+
+    const findMajority = (votesList) => {
+      let candidate = null;
+      let count = 0;
+      votesList.forEach((vote) => {
+        if (count === 0) {
+          candidate = vote;
+          count = 1;
+          return;
+        }
+        if (vote === candidate) {
+          count += 1;
+        } else {
+          count -= 1;
+        }
+      });
+
+      if (candidate === null) {
+        return { candidate: "None", hasMajority: false };
+      }
+
+      const occurrences = votesList.filter((vote) => vote === candidate).length;
+      const hasMajority = occurrences > votesList.length / 2;
+      return { candidate, hasMajority };
+    };
+
+    const render = () => {
+      const counts = tallyCounts(votes);
+      const totalVotes = votes.length;
+      totalVotesEl.textContent = totalVotes.toString();
+
+      const majority = findMajority(votes);
+      majorityCandidateEl.textContent = majority.candidate;
+      majorityStatusEl.textContent = majority.hasMajority ? "Majority confirmed" : "No majority yet";
+
+      const maxVotes = Math.max(1, ...Object.values(counts));
+      voteGrid.innerHTML = "";
+
+      languages.forEach((lang, index) => {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const ratio = Math.round((counts[lang] / maxVotes) * 100);
+
+        card.innerHTML = `
+          <header>
+            <h2 class="language">${lang}</h2>
+            <span class="badge">#${index + 1}</span>
+          </header>
+          <div class="vote-row">
+            <span class="count">${counts[lang]} votes</span>
+            <button type="button" data-lang="${lang}">Vote</button>
+          </div>
+          <div class="bar" aria-hidden="true">
+            <span style="width: ${ratio}%"></span>
+          </div>
+        `;
+
+        voteGrid.appendChild(card);
+      });
+    };
+
+    voteGrid.addEventListener("click", (event) => {
+      const target = event.target;
+      if (target instanceof HTMLButtonElement && target.dataset.lang) {
+        votes.push(target.dataset.lang);
+        saveVotes(votes);
+        render();
+      }
+    });
+
+    resetVotesBtn.addEventListener("click", () => {
+      votes = [];
+      saveVotes(votes);
+      render();
+    });
+
+    randomVoteBtn.addEventListener("click", () => {
+      const randomLang = languages[Math.floor(Math.random() * languages.length)];
+      votes.push(randomLang);
+      saveVotes(votes);
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

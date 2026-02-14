@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moore's Voting Algorithm - Slides</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Space+Grotesk:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f1e7;
+      --ink: #191612;
+      --muted: #6a5e52;
+      --accent: #e2572f;
+      --accent-2: #2d7f5f;
+      --accent-3: #2f6fe6;
+      --paper: rgba(255, 255, 255, 0.78);
+      --shadow: 0 18px 40px rgba(25, 22, 18, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #fff2da 0%, transparent 60%),
+        radial-gradient(900px 600px at 100% 0%, #f1dfcc 0%, transparent 55%),
+        linear-gradient(180deg, #f8f2e9 0%, #efe5d6 100%);
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    main {
+      height: 100vh;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 64px 8vw;
+      display: grid;
+      align-content: center;
+      gap: 18px;
+      scroll-snap-align: start;
+    }
+
+    .card {
+      background: var(--paper);
+      border-radius: 24px;
+      padding: 32px 36px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(25, 22, 18, 0.08);
+    }
+
+    h1,
+    h2 {
+      font-family: "Fraunces", serif;
+      margin: 0;
+      letter-spacing: 0.01em;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 4vw, 4.2rem);
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 2.6vw, 2.6rem);
+    }
+
+    p,
+    li {
+      font-size: clamp(1rem, 1.3vw, 1.25rem);
+      line-height: 1.6;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+      margin: 0;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid rgba(25, 22, 18, 0.12);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .accent {
+      color: var(--accent);
+    }
+
+    .accent-2 {
+      color: var(--accent-2);
+    }
+
+    .accent-3 {
+      color: var(--accent-3);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .quote {
+      border-left: 4px solid var(--accent);
+      padding-left: 14px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .code {
+      font-family: "Courier New", monospace;
+      background: #14100e;
+      color: #f6f1e7;
+      padding: 16px 18px;
+      border-radius: 14px;
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+    }
+
+    .footer {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    @media (max-width: 720px) {
+      section {
+        padding: 48px 7vw;
+      }
+
+      .card {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <section>
+      <div class="card">
+        <span class="tag">DSA Presentation</span>
+        <h1>Moore's Voting Algorithm</h1>
+        <p class="accent">ChatGPT-assisted exploration, evaluation, and benchmarking</p>
+        <p class="footer">Data Structures and Algorithms</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Agenda</h2>
+        <ul>
+          <li>Introduction</li>
+          <li>Chatbot interactions</li>
+          <li>Evaluation</li>
+          <li>Application demo</li>
+          <li>Benchmark results</li>
+          <li>Reflection and improvements</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Introduction</h2>
+        <ul>
+          <li>Finds a majority element in a list using counters.</li>
+          <li>Covered in class: majority elements and efficient tracking.</li>
+          <li>We used ChatGPT to clarify concepts and organize our discussion.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Interaction 1 — Definition</h2>
+        <p><strong>Q:</strong> What is Moore's Voting Algorithm and what problem does it solve?</p>
+        <p><strong>A:</strong> Linear-time, constant-space method to find a majority element (> n/2) by canceling out
+          different elements.</p>
+        <p class="quote">Accurate and concise.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Interaction 2 — Step by Step</h2>
+        <p><strong>Q:</strong> Can you explain how it works step by step?</p>
+        <div class="code">Example: [2, 2, 1, 1, 2]
+
+          candidate = null, count = 0
+          see 2 -> candidate = 2, count = 1
+          see 2 -> count = 2
+          see 1 -> count = 1
+          see 1 -> count = 0
+          see 2 -> candidate = 2, count = 1</div>
+        <p class="quote">Clear illustration of cancellation.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Interaction 3 — Complexity</h2>
+        <p><strong>Q:</strong> Time and space complexity and why optimal?</p>
+        <p><strong>A:</strong> Time O(n), Space O(1); any solution must inspect all elements.</p>
+        <p class="quote">Matches theory and our implementation.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Interaction 4 — Applications</h2>
+        <p><strong>Q:</strong> Real-world applications?</p>
+        <p><strong>A:</strong> Live polls, streaming vote counts, sensor consensus, network analysis, game input
+          smoothing.</p>
+        <p class="quote">Relevant and practical.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Interaction 5 — Pros, Cons, Variants</h2>
+        <div class="two-col">
+          <div>
+            <p><strong>Pros</strong></p>
+            <ul>
+              <li>O(n) time, O(1) space</li>
+              <li>Single pass</li>
+              <li>Streaming friendly</li>
+            </ul>
+          </div>
+          <div>
+            <p><strong>Cons</strong></p>
+            <ul>
+              <li>Only strict majority</li>
+              <li>Requires verification</li>
+              <li>No frequency counts</li>
+            </ul>
+          </div>
+        </div>
+        <p class="accent-2"><strong>Variant:</strong> Track two candidates to find elements > n/3, then verify.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Interaction 6 — Edge Cases + Comparison</h2>
+        <div class="two-col">
+          <div>
+            <p><strong>Edge cases</strong></p>
+            <ul>
+              <li>Empty array</li>
+              <li>Single element</li>
+              <li>No majority</li>
+              <li>All identical</li>
+              <li>Alternating values</li>
+            </ul>
+          </div>
+          <div>
+            <p><strong>Comparison</strong></p>
+            <ul>
+              <li>Moore's: O(n), streaming</li>
+              <li>Sorting: O(n log n), needs all data</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Evaluation Summary</h2>
+        <div class="two-col">
+          <ul>
+            <li>Accuracy: 10/10</li>
+            <li>Completeness: 8.5/10</li>
+            <li>Clarity: 9/10</li>
+            <li>Relevance: 10/10</li>
+          </ul>
+          <div>
+            <p class="accent-3"><strong>Overall: 9/10</strong></p>
+            <p class="quote">Correct and focused, with minor gaps on verification emphasis.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Application Example — Online Poll</h2>
+        <ul>
+          <li>Votes arrive as a stream; storing all votes is impractical.</li>
+          <li>Maintain candidate + count in one pass.</li>
+          <li>Verify the candidate at the end.</li>
+          <li>Fits O(n) time and O(1) memory requirements.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Benchmark Results</h2>
+        <ul>
+          <li>Growing array up to 1,000,000 elements.</li>
+          <li><span class="accent">Moore's</span>: roughly linear, ~0.03 us at 1 to ~709 us at 1,000,000.</li>
+          <li><span class="accent-3">Sort-based</span>: O(n log n), ~28 ms at 1,000,000.</li>
+          <li><span class="accent-2">Brute force</span>: O(n^2), impractical after 50,000.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Reflection</h2>
+        <ul>
+          <li>Strength: Fast, clear explanations and example-driven learning.</li>
+          <li>Weakness: Candidate must be verified when majority is not guaranteed.</li>
+          <li>Prompting mattered: sharper questions improved depth.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Improvements</h2>
+        <ul>
+          <li>Emphasize mandatory verification more strongly.</li>
+          <li>Add short pseudocode or a small code snippet.</li>
+          <li>Compare tradeoffs vs hash maps or sorting in specific scenarios.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2>Conclusion</h2>
+        <ul>
+          <li>Moore's Voting is efficient for strict majority detection.</li>
+          <li>ChatGPT was effective for learning and structuring the presentation.</li>
+          <li>Benchmark results match expected complexity trends.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</body>
+
+</html>
